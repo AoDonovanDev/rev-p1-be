@@ -22,8 +22,9 @@ public class SocialMediaController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<Account> createAccount() {
+    public @ResponseBody ResponseEntity<Account> createAccount(@RequestBody Account account) {
         Account bingus = new Account();
+        System.out.println("does this work like i think it does: " + account.getUsername());
         return ResponseEntity.status(200).body(bingus);
     }
 
