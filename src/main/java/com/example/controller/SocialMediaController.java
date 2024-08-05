@@ -1,13 +1,22 @@
 package com.example.controller;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.entity.Account;
 import com.example.entity.Message;
+import com.example.exception.AccountAlreadyExistsException;
+import com.example.exception.AccountDoesNotExistException;
+import com.example.exception.InvalidMessageException;
+import com.example.exception.InvalidUsernamePasswordException;
+import com.example.repository.AccountRepository;
+import com.example.service.AccountService;
+import com.example.service.MessageService;
 
 
 /**
@@ -19,54 +28,94 @@ import com.example.entity.Message;
 @RestController
 public class SocialMediaController {
 
+    @Autowired
+    AccountService accountService;
+
+    @Autowired
+    MessageService messageService;
 
 
     @PostMapping("/register")
     public @ResponseBody ResponseEntity<Account> createAccount(@RequestBody Account account) {
-        Account bingus = new Account();
-        System.out.println("does this work like i think it does: " + account.getUsername());
-        return ResponseEntity.status(200).body(bingus);
+        try {
+            Account newAccount = accountService.createAccount(account);
+            return ResponseEntity.status(200).body(newAccount); 
+        } catch (AccountAlreadyExistsException | InvalidUsernamePasswordException e) {
+            e.printStackTrace();
+            if(e.getClass().getName().contains("AccountAlreadyExistsException")){
+                return ResponseEntity.status(409).body(null);
+            } else {
+                return ResponseEntity.status(400).body(null);
+            }
+        }
+
+
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Account> login() {
-        Account bingus = new Account();
-        return ResponseEntity.status(200).body(bingus);
+    public @ResponseBody ResponseEntity<Account> login(@RequestBody Account account) {
+        
+        try {
+            Account authedAcc = accountService.login(account);
+            return ResponseEntity.status(200).body(authedAcc);
+        } catch (AccountDoesNotExistException | InvalidUsernamePasswordException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(401).body(null);
+        }
     }
 
     @PostMapping("/messages") 
-    public ResponseEntity<Message> createMessage() {
-        Message msg = new Message();
-        return ResponseEntity.status(200).body(msg);
+    public @ResponseBody ResponseEntity<Message> createMessage(@RequestBody Message message) {
+
+        try {
+            Message newMessage = messageService.creatMessage(message);
+            return ResponseEntity.status(200).body(newMessage);
+        } catch (InvalidMessageException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(null);
+        }
+
+        
     }
 
     @GetMapping("/messages") 
-    public ResponseEntity<List<Message>> getAllMessages() {
-        List<Message> msgs = new ArrayList<Message>();
+    public @ResponseBody ResponseEntity<List<Message>> getAllMessages() {
+        List<Message> msgs = messageService.getAllMessages();
         return ResponseEntity.status(200).body(msgs);
     }
     
     @GetMapping("/messages/{id}")
-    public ResponseEntity<Message> getMessageByID() {
-        Message msg = new Message();
-        return ResponseEntity.status(200).body(msg);
+    public @ResponseBody ResponseEntity<Message> getMessageByID(@PathVariable Integer id) {
+        Optional<Message> messageOpt = messageService.getMessageById(id);
+        if(messageOpt.isPresent()) {
+            return ResponseEntity.status(200).body(messageOpt.get());
+        }
+        return ResponseEntity.status(200).body(null);
     }
 
-    @DeleteMapping("messages/{id}")
-    public ResponseEntity<Message> deleteMessage() {
-        Message msg = new Message();
-        return ResponseEntity.status(200).body(msg);
+    @DeleteMapping("/messages/{id}")
+    public @ResponseBody ResponseEntity<Integer> deleteMessage(@PathVariable Integer id) {
+        Optional<Message> messageOpt = messageService.deleteMessage(id);
+        if(messageOpt.isPresent()) {
+            return ResponseEntity.status(200).body(1);
+        }
+        return ResponseEntity.status(200).body(null);
     }
 
-    @PatchMapping("messages/{id}")
-    public ResponseEntity<Message> updateMessage() {
-        Message msg = new Message();
-        return ResponseEntity.status(200).body(msg);
+    @PatchMapping("/messages/{id}")
+    public @ResponseBody ResponseEntity<Integer> updateMessage(@PathVariable Integer id, @RequestBody Message message) {
+        try {
+            messageService.updateMessage(id, message.getMessageText());
+            return ResponseEntity.status(200).body(1);
+        } catch (InvalidMessageException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(null);
+        }
     }
 
     @GetMapping("/accounts/{account_id}/messages")
-    public ResponseEntity<List<Message>> getMessagesByUser() {
-        List<Message> msgs = new ArrayList<Message>();
+    public @ResponseBody ResponseEntity<List<Message>> getMessagesByUser(@PathVariable Integer account_id) {
+        List<Message> msgs = messageService.getMessagesByUser(account_id);
         return ResponseEntity.status(200).body(msgs);
     }
 }

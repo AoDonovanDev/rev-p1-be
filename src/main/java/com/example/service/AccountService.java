@@ -23,7 +23,7 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public Account newAccount(Account account) throws AccountAlreadyExistsException, InvalidUsernamePasswordException{
+    public Account createAccount(Account account) throws AccountAlreadyExistsException, InvalidUsernamePasswordException{
         Optional<Account> existingAcc = accountRepository.findByUsername(account.getUsername());
         if(existingAcc.isPresent()) {
             throw new AccountAlreadyExistsException();
