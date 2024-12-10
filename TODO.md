@@ -1,0 +1,4 @@
+-- rework message entity as posts
+-- create comments entity
+-- create likes entity
+-- create follows entity
