@@ -5,6 +5,5 @@ testCases_log.txt
 restructure_tmp/
 restructured_labs/
 .revature/tmp
-.vscode
 .idea/
-
+.vscode
