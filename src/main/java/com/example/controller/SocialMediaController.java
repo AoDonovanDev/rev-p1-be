@@ -68,7 +68,7 @@ public class SocialMediaController {
     public @ResponseBody ResponseEntity<Post> createPost(@RequestBody Post post) {
 
         try {
-            Post newPost = postService.creatPost(post);
+            Post newPost = postService.createPost(post);
             return ResponseEntity.status(200).body(newPost);
         } catch (InvalidPostException e) {
             e.printStackTrace();

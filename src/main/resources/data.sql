@@ -12,7 +12,7 @@ create table account (
 create table post (
     postId int primary key auto_increment,
     postedBy int,
-    postText varchar(255),
+    postText text(255),
     timePostedEpoch bigint,
     foreign key (postedBy) references account(accountId)
 );
@@ -21,7 +21,7 @@ create table comment (
     commentId int primary key auto_increment,
     postId int,
     commentedBy int,    
-    commentText varchar(255),
+    commentText text(255),
     foreign key (commentedBy) references account(accountId),
     foreign key (postId) references post(postId)
 );
@@ -59,3 +59,5 @@ insert into postlike (accountId, postId) values (9999, 9996);
 insert into follow (followingAccountId, followedAccountId) values (9999, 9996);
 /* 9997 is following 9999 */
 insert into follow (followingAccountId, followedAccountId) values (9997, 9999);
+
+insert into comment (postId, commentedBy, commentText) values (9999, 9997, 'You are wrong and I disagree');

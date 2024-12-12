@@ -27,7 +27,7 @@ public class PostService {
         this.accountRepository = accountRepository;
     }
 
-    public Post creatPost(Post post) throws InvalidPostException{
+    public Post createPost(Post post) throws InvalidPostException{
         Boolean validAccount = accountRepository.existsById(post.getPostedBy());
         if(post.getPostText().length() > 255 || post.getPostText().length() == 0 || !validAccount) {
             throw new InvalidPostException();
@@ -65,8 +65,6 @@ public class PostService {
     }
 
     public List<Post> getPostsByUser(Integer accountId) {
-        List<Account> followedBy = accountRepository.findById(accountId).get().getFollowedBy();
-        System.out.println(followedBy);
         return accountRepository.findById(accountId).get().getPosts();
 
     }
