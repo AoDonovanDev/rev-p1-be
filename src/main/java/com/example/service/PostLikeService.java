@@ -2,7 +2,7 @@ package com.example.service;
 
 
 import java.util.Optional;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,15 +10,18 @@ import com.example.entity.Account;
 import com.example.entity.Post;
 import com.example.entity.PostLike;
 import com.example.repository.PostLikeRepository;
+import com.example.repository.PostRepository;
 
 @Service
 @Transactional
 public class PostLikeService {
     
     PostLikeRepository postLikeRepository;
+    PostRepository postRepository;
 
     @Autowired
-    public PostLikeService(PostLikeRepository postLikeRepository){
+    public PostLikeService(PostRepository postRepository, PostLikeRepository postLikeRepository){
+        this.postRepository = postRepository;
         this.postLikeRepository = postLikeRepository;
     }
 
@@ -34,6 +37,11 @@ public class PostLikeService {
             PostLike pl = plOpt.get();
             postLikeRepository.delete(pl);
         }
+    }
+
+    List<PostLike> findPostsLikedByAccount(Integer accountId){
+        List<PostLike> plList = postLikeRepository.findByAccountId(accountId);
+        return plList;
     }
 
 }

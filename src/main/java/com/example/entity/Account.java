@@ -3,35 +3,22 @@ import java.util.List;
 
 import javax.persistence.*;
 
-/**
- * This is a class that models an Account.
- *
- * You should NOT make any modifications to this class.
- */
+
 @Entity
 @Table(name="account")
 public class Account {
-    /**
-     * An id for this Account. You should use this as the Entity's ID.
-     */
+
     @Column(name="accountId")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer accountId;
-    /**
-     * A username for this Account (must be unique and not blank)
-     */
+  
     @Column(name="username")
     private String username;
-    /**
-     * A password for this account (must be over 4 characters)
-     */
+ 
     @Column(name="password")
     private String password;
-    /**
-     * A default, no-args constructor, as well as correctly formatted getters and setters, are needed for
-     * Jackson Objectmapper to work.
-     */
+
 
 
     public Account(){
@@ -136,10 +123,6 @@ public class Account {
 		return true;
 	}
 
-    /**
-     * Overriding the default toString() method allows for easy debugging.
-     * @return a String representation of this class.
-     */
     @Override
     public String toString() {
         return "Account{" +
