@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.entity.Account;
 import com.example.entity.Post;
 import com.example.exception.InvalidPostException;
 import com.example.repository.AccountRepository;
@@ -64,6 +65,9 @@ public class PostService {
     }
 
     public List<Post> getPostsByUser(Integer accountId) {
-        return postRepository.findByPostedBy(accountId);
+        List<Account> followedBy = accountRepository.findById(accountId).get().getFollowedBy();
+        System.out.println(followedBy);
+        return accountRepository.findById(accountId).get().getPosts();
+
     }
 }

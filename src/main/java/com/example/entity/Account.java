@@ -19,8 +19,30 @@ public class Account {
     @Column(name="password")
     private String password;
 
+    @OneToMany(mappedBy = "account")
+    private List<Post> posts;
 
+    @ManyToMany
+    @JoinTable(
+        name="postlike",
+        joinColumns = @JoinColumn(name="accountId", referencedColumnName = "accountId"),
+        inverseJoinColumns = @JoinColumn(name="postId", referencedColumnName = "postId"))
+    private List<Post> likedPosts;
 
+    @ManyToMany
+    @JoinTable(
+        name="follow",
+        joinColumns = @JoinColumn(name="followingAccountId", referencedColumnName = "accountId"),
+        inverseJoinColumns = @JoinColumn(name="followedAccountId", referencedColumnName = "accountId"))
+    private List<Account> following;
+
+    @ManyToMany
+    @JoinTable(
+        name="follow",
+        joinColumns = @JoinColumn(name="followedAccountId", referencedColumnName = "accountId"),
+        inverseJoinColumns = @JoinColumn(name="followingAccountId", referencedColumnName = "accountId"))
+    private List<Account> followedBy;
+    
     public Account(){
 
     }
@@ -45,6 +67,13 @@ public class Account {
         this.accountId = accountId;
         this.username = username;
         this.password = password;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
     /**
      * Properly named getters and setters are necessary for Jackson ObjectMapper to work. You may use them as well.
@@ -89,7 +118,27 @@ public class Account {
         this.password = password;
     }
 
+    public List<Post> getLikedPosts() {
+        return likedPosts;
+    }
+    public void setLikedPosts(List<Post> likedPosts) {
+        this.likedPosts = likedPosts;
+    }
+
+    public List<Account> getFollowing() {
+        return following;
+    }
+    public void setFollowing(List<Account> following) {
+        this.following = following;
+    }
     
+    public List<Account> getFollowedBy() {
+        return followedBy;
+    }
+    public void setFollowedBy(List<Account> followedBy) {
+        this.followedBy = followedBy;
+    }
+
     /**
      * Overriding the default equals() method adds functionality to tell when two objects are identical, allowing
      * Assert.assertEquals and List.contains to function.

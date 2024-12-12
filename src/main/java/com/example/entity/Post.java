@@ -1,7 +1,7 @@
 package com.example.entity;
 
 import javax.persistence.*;
-
+import java.util.List;
 
 @Entity
 @Table(name="post")
@@ -19,7 +19,14 @@ public class Post {
  
     @Column (name="timePostedEpoch")
     private Long timePostedEpoch;
- 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="postedBy", insertable = false, updatable = false)
+    private Account account;
+    
+    @OneToMany(mappedBy = "postId")
+    private List<Comment> comments;
+
     public Post(){
     }
     /**

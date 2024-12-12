@@ -19,6 +19,10 @@ public class Comment {
     @Column (name="commentText")
     private String commentText;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "postId", insertable = false, updatable = false)
+    private Post post;
+
     public Comment(){}
 
     public Comment(Integer postId, Integer commentedBy, String commentText){

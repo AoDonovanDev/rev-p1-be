@@ -1,7 +1,7 @@
-drop table if exists post;
-drop table if exists account;
-drop table if exists comment;
-drop table if exists postlike;
+drop table if exists post CASCADE;
+drop table if exists account CASCADE;
+drop table if exists comment CASCADE;
+drop table if exists postlike CASCADE;
 drop table if exists follow;
 
 create table account (
@@ -52,3 +52,10 @@ insert into post values (9999, 9999,'test message 1',1669947792);
 insert into post values (9997, 9997,'test message 2',1669947792);
 insert into post values (9996, 9996,'test message 3',1669947792);
 
+insert into postlike (accountId, postId) values (9999, 9997);
+insert into postlike (accountId, postId) values (9999, 9996);
+
+/* 9999 is following 9996 */
+insert into follow (followingAccountId, followedAccountId) values (9999, 9996);
+/* 9997 is following 9999 */
+insert into follow (followingAccountId, followedAccountId) values (9997, 9999);
