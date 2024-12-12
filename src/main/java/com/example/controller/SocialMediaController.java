@@ -9,14 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.entity.Account;
-import com.example.entity.Message;
+import com.example.entity.Post;
 import com.example.exception.AccountAlreadyExistsException;
 import com.example.exception.AccountDoesNotExistException;
-import com.example.exception.InvalidMessageException;
+import com.example.exception.InvalidPostException;
 import com.example.exception.InvalidUsernamePasswordException;
 import com.example.repository.AccountRepository;
 import com.example.service.AccountService;
-import com.example.service.MessageService;
+import com.example.service.PostService;
 
 
 /**
@@ -32,7 +32,7 @@ public class SocialMediaController {
     AccountService accountService;
 
     @Autowired
-    MessageService messageService;
+    PostService postService;
 
 
     @PostMapping("/register")
@@ -64,13 +64,13 @@ public class SocialMediaController {
         }
     }
 
-    @PostMapping("/messages") 
-    public @ResponseBody ResponseEntity<Message> createMessage(@RequestBody Message message) {
+    @PostMapping("/posts") 
+    public @ResponseBody ResponseEntity<Post> createPost(@RequestBody Post post) {
 
         try {
-            Message newMessage = messageService.creatMessage(message);
-            return ResponseEntity.status(200).body(newMessage);
-        } catch (InvalidMessageException e) {
+            Post newPost = postService.creatPost(post);
+            return ResponseEntity.status(200).body(newPost);
+        } catch (InvalidPostException e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body(null);
         }
@@ -78,44 +78,44 @@ public class SocialMediaController {
         
     }
 
-    @GetMapping("/messages") 
-    public @ResponseBody ResponseEntity<List<Message>> getAllMessages() {
-        List<Message> msgs = messageService.getAllMessages();
+    @GetMapping("/posts") 
+    public @ResponseBody ResponseEntity<List<Post>> getAllPosts() {
+        List<Post> msgs = postService.getAllPosts();
         return ResponseEntity.status(200).body(msgs);
     }
     
-    @GetMapping("/messages/{id}")
-    public @ResponseBody ResponseEntity<Message> getMessageByID(@PathVariable Integer id) {
-        Optional<Message> messageOpt = messageService.getMessageById(id);
-        if(messageOpt.isPresent()) {
-            return ResponseEntity.status(200).body(messageOpt.get());
+    @GetMapping("/posts/{id}")
+    public @ResponseBody ResponseEntity<Post> getPostByID(@PathVariable Integer id) {
+        Optional<Post> postOpt = postService.getPostById(id);
+        if(postOpt.isPresent()) {
+            return ResponseEntity.status(200).body(postOpt.get());
         }
         return ResponseEntity.status(200).body(null);
     }
 
-    @DeleteMapping("/messages/{id}")
-    public @ResponseBody ResponseEntity<Integer> deleteMessage(@PathVariable Integer id) {
-        Optional<Message> messageOpt = messageService.deleteMessage(id);
-        if(messageOpt.isPresent()) {
+    @DeleteMapping("/posts/{id}")
+    public @ResponseBody ResponseEntity<Integer> deletePost(@PathVariable Integer id) {
+        Optional<Post> postOpt = postService.deletePost(id);
+        if(postOpt.isPresent()) {
             return ResponseEntity.status(200).body(1);
         }
         return ResponseEntity.status(200).body(null);
     }
 
-    @PatchMapping("/messages/{id}")
-    public @ResponseBody ResponseEntity<Integer> updateMessage(@PathVariable Integer id, @RequestBody Message message) {
+    @PatchMapping("/posts/{id}")
+    public @ResponseBody ResponseEntity<Integer> updatePost(@PathVariable Integer id, @RequestBody Post post) {
         try {
-            messageService.updateMessage(id, message.getMessageText());
+            postService.updatePost(id, post.getPostText());
             return ResponseEntity.status(200).body(1);
-        } catch (InvalidMessageException e) {
+        } catch (InvalidPostException e) {
             e.printStackTrace();
             return ResponseEntity.status(400).body(null);
         }
     }
 
-    @GetMapping("/accounts/{account_id}/messages")
-    public @ResponseBody ResponseEntity<List<Message>> getMessagesByUser(@PathVariable Integer account_id) {
-        List<Message> msgs = messageService.getMessagesByUser(account_id);
+    @GetMapping("/accounts/{account_id}/posts")
+    public @ResponseBody ResponseEntity<List<Post>> getPostsByUser(@PathVariable Integer account_id) {
+        List<Post> msgs = postService.getPostsByUser(account_id);
         return ResponseEntity.status(200).body(msgs);
     }
 }

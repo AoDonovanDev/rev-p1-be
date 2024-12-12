@@ -1,4 +1,5 @@
 package com.example.entity;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -20,15 +21,19 @@ public class Account {
     /**
      * A username for this Account (must be unique and not blank)
      */
+    @Column(name="username")
     private String username;
     /**
      * A password for this account (must be over 4 characters)
      */
+    @Column(name="password")
     private String password;
     /**
      * A default, no-args constructor, as well as correctly formatted getters and setters, are needed for
      * Jackson Objectmapper to work.
      */
+
+
     public Account(){
 
     }
@@ -96,6 +101,8 @@ public class Account {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    
     /**
      * Overriding the default equals() method adds functionality to tell when two objects are identical, allowing
      * Assert.assertEquals and List.contains to function.

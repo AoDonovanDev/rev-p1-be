@@ -15,11 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
-import com.example.entity.Message;
+import com.example.entity.Post;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class RetrieveAllMessagesTest {
+public class RetrieveAllPostsTest {
 	ApplicationContext app;
     HttpClient webClient;
     ObjectMapper objectMapper;
@@ -45,18 +45,18 @@ public class RetrieveAllMessagesTest {
     }
     
     @Test
-    public void getAllMessagesMessagesAvailable() throws IOException, InterruptedException {
+    public void getAllPostsPostsAvailable() throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/messages"))
+                .uri(URI.create("http://localhost:8080/posts"))
                 .build();
         HttpResponse<String> response = webClient.send(request, HttpResponse.BodyHandlers.ofString());
         int status = response.statusCode();
         Assertions.assertEquals(200, status, "Expected Status Code 200 - Actual Code was: " + status);
-        List<Message> expectedResult = new ArrayList<Message>();
-        expectedResult.add(new Message(9996, 9996, "test message 3", 1669947792L));
-        expectedResult.add(new Message(9997, 9997, "test message 2", 1669947792L));
-        expectedResult.add(new Message(9999, 9999, "test message 1", 1669947792L));
-        List<Message> actualResult = objectMapper.readValue(response.body().toString(), new TypeReference<List<Message>>(){});
+        List<Post> expectedResult = new ArrayList<Post>();
+        expectedResult.add(new Post(9996, 9996, "test post 3", 1669947792L));
+        expectedResult.add(new Post(9997, 9997, "test post 2", 1669947792L));
+        expectedResult.add(new Post(9999, 9999, "test post 1", 1669947792L));
+        List<Post> actualResult = objectMapper.readValue(response.body().toString(), new TypeReference<List<Post>>(){});
         Assertions.assertEquals(expectedResult, actualResult, "Expected="+expectedResult + ", Actual="+actualResult);
     }
 }
