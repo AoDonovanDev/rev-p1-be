@@ -17,6 +17,7 @@ public class Follow {
     @Column (name="followedAccountId")
     private Integer followedAccountId;
 
+
     public Follow(){}
 
     public Follow(Integer followingAccountId, Integer followedAccountId){
