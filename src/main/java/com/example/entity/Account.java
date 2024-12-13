@@ -26,21 +26,21 @@ public class Account {
     @OneToMany(mappedBy = "account")
     private List<Post> posts;
 
-    @ManyToMany
+    @OneToMany
     @JoinTable(
         name="postlike",
         joinColumns = @JoinColumn(name="accountId", referencedColumnName = "accountId"),
         inverseJoinColumns = @JoinColumn(name="postId", referencedColumnName = "postId"))
     private List<Post> likedPosts;
 
-    @ManyToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name="follow",
         joinColumns = @JoinColumn(name="followingAccountId", referencedColumnName = "accountId"),
         inverseJoinColumns = @JoinColumn(name="followedAccountId", referencedColumnName = "accountId"))
     private List<Account> following;
 
-    @ManyToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name="follow",
         joinColumns = @JoinColumn(name="followedAccountId", referencedColumnName = "accountId"),
@@ -132,11 +132,11 @@ public class Account {
     public List<Integer> getFollowing() {
 
         List<Integer> userIds = following.stream().map(el -> el.accountId).toList();
-        System.out.println(userIds);
-        return userIds.size() > 0 ? userIds : new ArrayList<>();
+        return userIds;
     }
+
     public void setFollowing(List<Account> following) {
-        this.following = following.size() > 0 ? following : new ArrayList<>();
+        this.following = following;
     }
 
     public List<Integer> getFollowedBy() {

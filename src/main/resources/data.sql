@@ -61,8 +61,8 @@ insert into follow (followingAccountId, followedAccountId) values (9997, 9999);
 /* 9999 is following 9996 */
 insert into follow (followingAccountId, followedAccountId) values (9999, 9996);
 
+insert into follow (followingAccountId, followedAccountId) values (9999, 9998);
+insert into follow (followingAccountId, followedAccountId) values (9998, 9999);
 
 insert into comment (postId, commentedBy, commentText) values (9999, 9997, 'You are wrong and I disagree');
 
-insert into follow (followingAccountId, followedAccountId) values (9999, 9998);
-insert into follow (followingAccountId, followedAccountId) values (9998, 9999);
