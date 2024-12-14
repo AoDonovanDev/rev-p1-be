@@ -7,3 +7,4 @@ restructured_labs/
 .revature/tmp
 .idea/
 .vscode
+src/main/resources/application.properties
