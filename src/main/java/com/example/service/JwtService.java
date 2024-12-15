@@ -1,6 +1,11 @@
 package com.example.service;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.crypto.SecretKey;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,35 +14,54 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import com.example.entity.Account;
+import com.example.entity.AccountIdStruct;
 import com.example.exception.AccountInfoException;
+import com.example.repository.AccountRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
+@Transactional
 public class JwtService {
 
     private SecretKey key = Jwts.SIG.HS256.key().build();
+    private AccountRepository accountRepository;
 
     @Autowired
     ObjectMapper om;
-    public JwtService(){
+
+    @Autowired
+    public JwtService(AccountRepository accountRepository){
+        this.accountRepository = accountRepository;
     }
 
     public String generateAccountToken(Account account){
         String jws = Jwts.builder()
         .claim("accountInfo", account)
+        .claim("accountId", account.getAccountId())
         .signWith(key).compact();
         return jws;
     }
 
-    public String returnAccountJson(String token) throws JwtException, AccountInfoException{
+    public Integer returnAccountIdFromToken(String token) throws JwtException, AccountInfoException{
         try {
             Claims claimsJson = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
-            String accJson = om.writeValueAsString(claimsJson);
-            return accJson;
+            Integer accountId = (Integer)claimsJson.get("accountId");
+            return accountId;
         } catch(Exception jwtException){
             jwtException.printStackTrace();
         }
         throw new AccountInfoException();
-        
     }
+
+    public AccountIdStruct validateAndRefresh(String token) throws JwtException{
+        try {
+            Claims claimsJson = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+            String accJson = om.writeValueAsString(claimsJson);
+            AccountIdStruct ais = om.readValue(accJson, AccountIdStruct.class);
+            return ais;
+        } catch(Exception err){
+            err.printStackTrace();
+        }
+        throw new JwtException("couldn't validate or refresh token");
+    }   
 }

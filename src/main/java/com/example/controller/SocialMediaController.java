@@ -6,12 +6,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.RequestEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.entity.AccInfoDto;
 import com.example.entity.Account;
 import com.example.entity.AuthDto;
 import com.example.entity.Post;
+import com.example.entity.PostLike;
 import com.example.exception.AccountAlreadyExistsException;
 import com.example.exception.AccountDoesNotExistException;
 import com.example.exception.InvalidPostException;
@@ -63,10 +65,21 @@ public class SocialMediaController {
     @PostMapping("/accountInfo")
     public @ResponseBody ResponseEntity<AccInfoDto> getUserInfo(@RequestBody String token){
         try {
-            AccInfoDto accJson = accountService.getAccountInfo(token);
-            return ResponseEntity.status(200).body(accJson);
+            Account account = accountService.getAccountInfo(token);
+            System.out.println("have we made it this far: ******** : " + account);
+            return ResponseEntity.status(200).body(new AccInfoDto(true, account));
         } catch(Exception e){
             return ResponseEntity.status(500).body(new AccInfoDto(false, null));
+        }
+    }
+
+    @PostMapping("/token")
+    public @ResponseBody ResponseEntity<AuthDto> validateAndRefreshToken(@RequestBody String token){
+        try {
+            AuthDto authDto = accountService.validateAndRefresh(token);
+            return ResponseEntity.status(200).body(authDto);
+        } catch(Exception e){
+            return ResponseEntity.status(500).body(new AuthDto(false, null));
         }
     }
 
@@ -123,5 +136,17 @@ public class SocialMediaController {
     public @ResponseBody ResponseEntity<List<Post>> getPostsByUser(@PathVariable Integer account_id) {
         List<Post> msgs = postService.getPostsByUser(account_id);
         return ResponseEntity.status(200).body(msgs);
+    }
+
+    @PostMapping("/posts/addLike")
+    public @ResponseBody ResponseEntity.BodyBuilder addLike(@RequestBody PostLike postLike){
+        postService.addLike(postLike.getAccountId(), postLike.getPostId());
+        return ResponseEntity.status(204);
+    }
+
+    @PostMapping("posts/removeLike")
+    public @ResponseBody ResponseEntity.BodyBuilder removeLike(@RequestBody PostLike postLike){
+        postService.removeLike(postLike.getAccountId(), postLike.getPostId());
+        return ResponseEntity.status(204);
     }
 }

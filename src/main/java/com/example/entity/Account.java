@@ -15,7 +15,7 @@ public class Account {
 
     @Column(name="accountId")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer accountId;
   
     @Column(name="username")

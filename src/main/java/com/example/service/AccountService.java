@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.entity.AccInfoDto;
 import com.example.entity.Account;
+import com.example.entity.AccountIdStruct;
 import com.example.entity.AuthDto;
 import com.example.exception.AccountAlreadyExistsException;
 import com.example.exception.AccountDoesNotExistException;
@@ -56,10 +57,17 @@ public class AccountService {
         throw new InvalidUsernamePasswordException();
     }
 
-    public AccInfoDto getAccountInfo(String token) throws JwtException, AccountInfoException{
+    public Account getAccountInfo(String token) throws JwtException, AccountInfoException{
+        Integer accountId = jwtService.returnAccountIdFromToken(token);
+        Account account = accountRepository.findByAccountId(accountId).get();
+        System.out.println(account);
+        return account;
+    }
 
-        String accJson = jwtService.returnAccountJson(token);
-        
-        return new AccInfoDto(true, accJson);
+    public AuthDto validateAndRefresh(String token) throws JwtException{
+        AccountIdStruct ais = jwtService.validateAndRefresh(token);
+        Account acc = accountRepository.findByAccountId(ais.getAccountId()).get();
+        String newToken = jwtService.generateAccountToken(acc);
+        return new AuthDto(true, newToken);
     }
 }

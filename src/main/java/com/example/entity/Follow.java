@@ -8,7 +8,7 @@ public class Follow {
     
     @Column (name="followId")
     @Id 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer followId;
 
     @Column (name="followingAccountId")

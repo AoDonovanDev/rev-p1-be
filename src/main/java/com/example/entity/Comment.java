@@ -7,7 +7,7 @@ public class Comment {
     
     @Column (name="commentId")
     @Id 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer commentId;
 
     @Column (name="postId")

@@ -8,8 +8,10 @@ public class PostLike {
     
     @Column (name="likeId")
     @Id 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer likeId;
+
+   
 
     @Column (name="accountId")
     private Integer accountId;
@@ -38,6 +40,14 @@ public class PostLike {
 
     public void setPostId(Integer postId) {
         this.postId = postId;
+    }
+
+    public Integer getLikeId() {
+        return likeId;
+    }
+
+    public void setLikeId(Integer likeId) {
+        this.likeId = likeId;
     }
 
     @Override

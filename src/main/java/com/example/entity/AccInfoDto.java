@@ -2,14 +2,17 @@ package com.example.entity;
 
 public class AccInfoDto {
     private boolean success;
-    private String accJson;
+    private Account account;
 
-    public AccInfoDto(boolean success, String accJson){
+    
+    public AccInfoDto(){}
+
+    public AccInfoDto(boolean success, Account account){
         this.success = success;
-        this.accJson = accJson;
+        this.account = account;
     }
 
-    public boolean isSuccess() {
+    public boolean getSuccess() {
         return success;
     }
 
@@ -17,11 +20,13 @@ public class AccInfoDto {
         this.success = success;
     }
 
-    public String getAccJson() {
-        return accJson;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccJson(String accJson) {
-        this.accJson = accJson;
+    public void setAccount(Account account) {
+        this.account = account;
     }
+
+    
 }
