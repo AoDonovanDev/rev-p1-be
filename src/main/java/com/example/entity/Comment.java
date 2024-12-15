@@ -23,6 +23,10 @@ public class Comment {
     @JoinColumn(name = "postId", insertable = false, updatable = false)
     private Post post;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "commentedBy", insertable = false, updatable = false)
+    private Account account;
+
     public Comment(){}
 
     public Comment(Integer postId, Integer commentedBy, String commentText){
@@ -68,6 +72,10 @@ public class Comment {
 
     public void setCommentText(String commentText) {
         this.commentText = commentText;
+    }
+
+    public String getAccount(){
+        return this.account.getUsername();
     }
 
     @Override

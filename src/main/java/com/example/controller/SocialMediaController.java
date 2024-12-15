@@ -8,7 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.entity.AccInfoDto;
 import com.example.entity.Account;
+import com.example.entity.AuthDto;
 import com.example.entity.Post;
 import com.example.exception.AccountAlreadyExistsException;
 import com.example.exception.AccountDoesNotExistException;
@@ -19,12 +21,6 @@ import com.example.service.AccountService;
 import com.example.service.PostService;
 
 
-/**
- * TODO: You will need to write your own endpoints and handlers for your controller using Spring. The endpoints you will need can be
- * found in readme.md as well as the test cases. You be required to use the @GET/POST/PUT/DELETE/etc Mapping annotations
- * where applicable as well as the @ResponseBody and @PathVariable annotations. You should
- * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
- */
 @RestController
 public class SocialMediaController {
 
@@ -53,14 +49,24 @@ public class SocialMediaController {
     }
 
     @PostMapping("/login")
-    public @ResponseBody ResponseEntity<Account> login(@RequestBody Account account) {
+    public @ResponseBody ResponseEntity<AuthDto> login(@RequestBody Account account) {
         
         try {
-            Account authedAcc = accountService.login(account);
-            return ResponseEntity.status(200).body(authedAcc);
+            AuthDto authDto = accountService.login(account);
+            return ResponseEntity.status(200).body(authDto);
         } catch (AccountDoesNotExistException | InvalidUsernamePasswordException e) {
             e.printStackTrace();
-            return ResponseEntity.status(401).body(null);
+            return ResponseEntity.status(401).body(new AuthDto(false, null));
+        }
+    }
+
+    @PostMapping("/accountInfo")
+    public @ResponseBody ResponseEntity<AccInfoDto> getUserInfo(@RequestBody String token){
+        try {
+            AccInfoDto accJson = accountService.getAccountInfo(token);
+            return ResponseEntity.status(200).body(accJson);
+        } catch(Exception e){
+            return ResponseEntity.status(500).body(new AccInfoDto(false, null));
         }
     }
 

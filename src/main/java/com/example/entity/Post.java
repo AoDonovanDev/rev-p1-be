@@ -111,6 +111,15 @@ public class Post {
     public void setTimePostedEpoch(Long timePostedEpoch) {
         this.timePostedEpoch = timePostedEpoch;
     }
+
+    public String getAccount(){
+        String username = account.getUsername();
+        return username;
+    }
+
+    public List<Comment> getComments(){
+        return this.comments;
+    }
     /**
      * Overriding the default equals() method adds functionality to tell when two objects are identical, allowing
      * Assert.assertEquals and List.contains to function.

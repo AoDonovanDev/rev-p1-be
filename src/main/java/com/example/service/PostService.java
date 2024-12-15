@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.entity.Account;
 import com.example.entity.Post;
+import com.example.entity.PostLike;
 import com.example.exception.InvalidPostException;
 import com.example.repository.AccountRepository;
+import com.example.repository.PostLikeRepository;
 import com.example.repository.PostRepository;
 
 @Service
@@ -21,10 +22,13 @@ public class PostService {
 
     AccountRepository accountRepository;
 
+    PostLikeRepository postLikeRepository;
+
     @Autowired
-    public PostService(PostRepository postRepository, AccountRepository accountRepository) {
+    public PostService(PostRepository postRepository, AccountRepository accountRepository, PostLikeRepository postLikeRepository) {
         this.postRepository = postRepository;
         this.accountRepository = accountRepository;
+        this.postLikeRepository = postLikeRepository;
     }
 
     public Post createPost(Post post) throws InvalidPostException{
@@ -66,6 +70,15 @@ public class PostService {
 
     public List<Post> getPostsByUser(Integer accountId) {
         return accountRepository.findById(accountId).get().getPosts();
+    }
 
+    public void addLike(Integer accountId, Integer postId){
+        PostLike pl = new PostLike(accountId, postId);
+        postLikeRepository.save(pl);
+    }
+
+    public void removeLike(Integer accountId, Integer postId){
+        PostLike pl = postLikeRepository.findByAccountIdAndPostId(accountId, postId).get();
+        postLikeRepository.delete(pl);
     }
 }
