@@ -67,7 +67,6 @@ public class SocialMediaController {
     public @ResponseBody ResponseEntity<AccInfoDto> getUserInfo(@RequestBody String token){
         try {
             Account account = accountService.getAccountInfo(token);
-            System.out.println("have we made it this far: ******** : " + account);
             return ResponseEntity.status(200).body(new AccInfoDto(true, account));
         } catch(Exception e){
             return ResponseEntity.status(500).body(new AccInfoDto(false, null));

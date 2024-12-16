@@ -73,16 +73,12 @@ public class PostService {
     }
 
     public void addLike(Integer accountId, Integer postId){
-        System.out.println("adding like: " + accountId + " " + postId);
         PostLike pl = new PostLike(accountId, postId);
-        System.out.println(pl);
         postLikeRepository.save(pl);
     }
 
     public void removeLike(Integer accountId, Integer postId){
         PostLike pl = postLikeRepository.findByPlAccountIdAndPlPostId(accountId, postId).get();
-        System.out.println("removing like: " + accountId + " " + postId);
-        System.out.println(pl);
         postLikeRepository.delete(pl);
     }
 }
