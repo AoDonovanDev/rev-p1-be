@@ -1,9 +1,5 @@
 package com.example.service;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import javax.crypto.SecretKey;
 import javax.transaction.Transactional;
 
@@ -16,7 +12,6 @@ import io.jsonwebtoken.Jwts;
 import com.example.entity.Account;
 import com.example.entity.AccountIdStruct;
 import com.example.exception.AccountInfoException;
-import com.example.repository.AccountRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -24,15 +19,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JwtService {
 
     private SecretKey key = Jwts.SIG.HS256.key().build();
-    private AccountRepository accountRepository;
 
     @Autowired
     ObjectMapper om;
 
     @Autowired
-    public JwtService(AccountRepository accountRepository){
-        this.accountRepository = accountRepository;
-    }
+    public JwtService(){}
 
     public String generateAccountToken(Account account){
         String jws = Jwts.builder()

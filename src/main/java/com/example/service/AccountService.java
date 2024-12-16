@@ -70,4 +70,13 @@ public class AccountService {
         String newToken = jwtService.generateAccountToken(acc);
         return new AuthDto(true, newToken);
     }
+
+    public AccInfoDto getAccountByAccountId(Integer accountId) throws AccountDoesNotExistException{
+        Optional<Account> accOpt = accountRepository.findByAccountId(accountId);
+        if(accOpt.isPresent()){
+            return new AccInfoDto(true, accOpt.get());
+        }
+        throw new AccountDoesNotExistException();
+        
+    }
 }

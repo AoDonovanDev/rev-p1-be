@@ -11,35 +11,37 @@ public class PostLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer likeId;
 
-   
+    @Column (name="plAccountId")
+    private Integer plAccountId;
 
-    @Column (name="accountId")
-    private Integer accountId;
+    @Column (name="plPostId")
+    private Integer plPostId;
 
-    @Column (name="postId")
-    private Integer postId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plPostId", insertable = false, updatable = false)
+    private Post post;
 
     public PostLike(){}
     
-    public PostLike(Integer accountId, Integer postId){
-        this.accountId = accountId;
-        this.postId = postId;
+    public PostLike(Integer plAccountId, Integer plPostId){
+        this.plAccountId = plAccountId;
+        this.plPostId = plPostId;
     }
 
-    public Integer getAccountId() {
-        return accountId;
+    public Integer getPlAccountId() {
+        return plAccountId;
     }
 
-    public void setAccountId(Integer accountId) {
-        this.accountId = accountId;
+    public void setPlAccountId(Integer plAccountId) {
+        this.plAccountId = plAccountId;
     }
 
-    public Integer getPostId() {
-        return postId;
+    public Integer getPlPostId() {
+        return plPostId;
     }
 
-    public void setPostId(Integer postId) {
-        this.postId = postId;
+    public void setPlPostId(Integer postId) {
+        this.plPostId = postId;
     }
 
     public Integer getLikeId() {
@@ -59,9 +61,9 @@ public class PostLike {
 		if (getClass() != obj.getClass())
 			return false;
         PostLike other = (PostLike) obj;
-        if(this.accountId != other.accountId)
+        if(this.plAccountId != other.plAccountId)
             return false;
-        if(this.postId != other.postId)
+        if(this.plPostId != other.plPostId)
             return false;
         return true;
     }

@@ -34,11 +34,12 @@ public class SocialMediaController {
 
 
     @PostMapping("/register")
-    public @ResponseBody ResponseEntity<Account> createAccount(@RequestBody Account account) {
+    public @ResponseBody ResponseEntity<AuthDto> createAccount(@RequestBody Account account) {
         try {
             Account newAccount = accountService.createAccount(account);
-            return ResponseEntity.status(200).body(newAccount); 
-        } catch (AccountAlreadyExistsException | InvalidUsernamePasswordException e) {
+            AuthDto authDto = accountService.login(newAccount);
+            return ResponseEntity.status(200).body(authDto); 
+        } catch (AccountAlreadyExistsException | AccountDoesNotExistException | InvalidUsernamePasswordException e) {
             e.printStackTrace();
             if(e.getClass().getName().contains("AccountAlreadyExistsException")){
                 return ResponseEntity.status(409).body(null);
@@ -138,15 +139,26 @@ public class SocialMediaController {
         return ResponseEntity.status(200).body(msgs);
     }
 
+    @GetMapping("/accounts/{account_id}")
+    public @ResponseBody ResponseEntity<AccInfoDto> getAccountByAccountId(@PathVariable Integer account_id){
+        try{
+            AccInfoDto accInfoDto = accountService.getAccountByAccountId(account_id);
+            return ResponseEntity.status(200).body(accInfoDto);
+        } catch(AccountDoesNotExistException e){
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(new AccInfoDto(false, null));   
+        }
+    }
+
     @PostMapping("/posts/addLike")
-    public @ResponseBody ResponseEntity.BodyBuilder addLike(@RequestBody PostLike postLike){
-        postService.addLike(postLike.getAccountId(), postLike.getPostId());
-        return ResponseEntity.status(204);
+    public @ResponseBody ResponseEntity<Object> addLike(@RequestBody PostLike postLike){
+        postService.addLike(postLike.getPlAccountId(), postLike.getPlPostId());
+        return ResponseEntity.status(204).body(null);
     }
 
     @PostMapping("posts/removeLike")
-    public @ResponseBody ResponseEntity.BodyBuilder removeLike(@RequestBody PostLike postLike){
-        postService.removeLike(postLike.getAccountId(), postLike.getPostId());
-        return ResponseEntity.status(204);
+    public @ResponseBody ResponseEntity<Object> removeLike(@RequestBody PostLike postLike){
+        postService.removeLike(postLike.getPlAccountId(), postLike.getPlPostId());
+        return ResponseEntity.status(204).body(null);
     }
 }

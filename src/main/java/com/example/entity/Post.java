@@ -1,6 +1,8 @@
 package com.example.entity;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,9 +26,13 @@ public class Post {
     @JoinColumn(name="postedBy", insertable = false, updatable = false)
     private Account account;
     
-    @OneToMany(mappedBy = "postId")
+    @OneToMany(mappedBy = "cmPostId")
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "plPostId")
+    private List<PostLike> postLikes;
+
+   
     public Post(){
     }
     /**
@@ -119,6 +125,11 @@ public class Post {
 
     public List<Comment> getComments(){
         return this.comments;
+    }
+
+    public List<Integer> getPostLikes() {
+        List<Integer> pls = postLikes == null ? new ArrayList<>() : postLikes.stream().map(el -> el.getPlPostId()).toList();
+        return pls;
     }
     /**
      * Overriding the default equals() method adds functionality to tell when two objects are identical, allowing

@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostLikeRepository extends JpaRepository<PostLike, Integer>{
     
-    public Optional<PostLike> findByAccountIdAndPostId(Integer accountId, Integer postId);
+    public Optional<PostLike> findByPlAccountIdAndPlPostId(Integer accountId, Integer plPostId);
 }

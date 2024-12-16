@@ -10,8 +10,8 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer commentId;
 
-    @Column (name="postId")
-    private Integer postId;
+    @Column (name="cmPostId")
+    private Integer cmPostId;
 
     @Column (name="commentedBy")
     private Integer commentedBy;
@@ -20,7 +20,7 @@ public class Comment {
     private String commentText;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId", insertable = false, updatable = false)
+    @JoinColumn(name = "cmPostId", insertable = false, updatable = false)
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,15 +29,15 @@ public class Comment {
 
     public Comment(){}
 
-    public Comment(Integer postId, Integer commentedBy, String commentText){
-        this.postId = postId;
+    public Comment(Integer cmPostId, Integer commentedBy, String commentText){
+        this.cmPostId = cmPostId;
         this.commentedBy = commentedBy;
         this.commentText = commentText;
     }
 
-    public Comment(Integer commentId, Integer postId, Integer commentedBy, String commentText){
+    public Comment(Integer commentId, Integer cmPostId, Integer commentedBy, String commentText){
         this.commentId = commentId;
-        this.postId = postId;
+        this.cmPostId = cmPostId;
         this.commentedBy = commentedBy;
         this.commentText = commentText;
     }
@@ -46,8 +46,8 @@ public class Comment {
         return commentId;
     }
 
-    public Integer getPostId() {
-        return postId;
+    public Integer getCmPostId() {
+        return cmPostId;
     }
 
     public Integer getCommentedBy() {
@@ -62,8 +62,8 @@ public class Comment {
         this.commentId = commentId;
     }
 
-    public void setPostId(Integer postId) {
-        this.postId = postId;
+    public void setCmPostId(Integer cmPostId) {
+        this.cmPostId = cmPostId;
     }
 
     public void setCommentedBy(Integer commentedBy) {
@@ -87,10 +87,10 @@ public class Comment {
 		if (getClass() != obj.getClass())
 			return false;
 		Comment other = (Comment) obj;
-		if (postId == null) {
+		if (cmPostId == null) {
 			if (other.commentId != null)
 				return false;
-		} else if (!postId.equals(other.commentId))
+		} else if (!cmPostId.equals(other.commentId))
 			return false;
 		if (commentText == null) {
 			if (other.commentText != null)
