@@ -22,7 +22,7 @@ public class Post {
     @Column (name="timePostedEpoch")
     private Long timePostedEpoch;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="postedBy", insertable = false, updatable = false)
     private Account account;
     

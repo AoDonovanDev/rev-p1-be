@@ -13,6 +13,7 @@ import com.example.entity.AccInfoDto;
 import com.example.entity.Account;
 import com.example.entity.AuthDto;
 import com.example.entity.Post;
+import com.example.entity.PostDto;
 import com.example.entity.PostLike;
 import com.example.exception.AccountAlreadyExistsException;
 import com.example.exception.AccountDoesNotExistException;
@@ -84,10 +85,10 @@ public class SocialMediaController {
     }
 
     @PostMapping("/posts") 
-    public @ResponseBody ResponseEntity<Post> createPost(@RequestBody Post post) {
+    public @ResponseBody ResponseEntity<PostDto> createPost(@RequestBody Post post) {
 
         try {
-            Post newPost = postService.createPost(post);
+            PostDto newPost = postService.createPost(post);
             return ResponseEntity.status(200).body(newPost);
         } catch (InvalidPostException e) {
             e.printStackTrace();

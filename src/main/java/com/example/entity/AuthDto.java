@@ -9,7 +9,7 @@ public class AuthDto {
         this.token = token;
     }
 
-    public boolean isAuthenticated() {
+    public boolean getAuthenticated() {
         return authenticated;
     }
 

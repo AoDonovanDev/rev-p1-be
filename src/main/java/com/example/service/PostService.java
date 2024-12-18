@@ -1,5 +1,6 @@
 package com.example.service;
 
+import java.lang.classfile.ClassFile.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,11 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.entity.Post;
+import com.example.entity.PostDto;
 import com.example.entity.PostLike;
 import com.example.exception.InvalidPostException;
 import com.example.repository.AccountRepository;
 import com.example.repository.PostLikeRepository;
 import com.example.repository.PostRepository;
+import com.example.entity.Account;
 
 @Service
 @Transactional
@@ -31,12 +34,16 @@ public class PostService {
         this.postLikeRepository = postLikeRepository;
     }
 
-    public Post createPost(Post post) throws InvalidPostException{
-        Boolean validAccount = accountRepository.existsById(post.getPostedBy());
-        if(post.getPostText().length() > 255 || post.getPostText().length() == 0 || !validAccount) {
+    public PostDto createPost(Post post) throws InvalidPostException{
+        Optional<Account> accOpt = accountRepository.findByAccountId(post.getPostedBy());
+        Account account = accOpt.get();
+        if(post.getPostText().length() > 255 || post.getPostText().length() == 0 || account==null) {
             throw new InvalidPostException();
         }
-        return postRepository.save(post);
+        Post newPost = postRepository.save(post);
+        PostDto postDto = new PostDto(newPost.getPostId(), account.getUsername(), newPost.getPostText(), newPost.getTimePostedEpoch());
+        return postDto;
+        
     }
 
     public Optional<Post> deletePost(Integer postId){
