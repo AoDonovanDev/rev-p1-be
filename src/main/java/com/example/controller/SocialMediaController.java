@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import com.example.entity.AccInfoDto;
 import com.example.entity.Account;
 import com.example.entity.AuthDto;
+import com.example.entity.Comment;
+import com.example.entity.CommentDto;
 import com.example.entity.Post;
 import com.example.entity.PostDto;
 import com.example.entity.PostLike;
@@ -19,8 +21,10 @@ import com.example.exception.AccountAlreadyExistsException;
 import com.example.exception.AccountDoesNotExistException;
 import com.example.exception.InvalidPostException;
 import com.example.exception.InvalidUsernamePasswordException;
+import com.example.exception.PostDoesNotExistException;
 import com.example.repository.AccountRepository;
 import com.example.service.AccountService;
+import com.example.service.CommentService;
 import com.example.service.PostService;
 
 
@@ -32,6 +36,9 @@ public class SocialMediaController {
 
     @Autowired
     PostService postService;
+
+    @Autowired
+    CommentService commentService;
 
 
     @PostMapping("/register")
@@ -156,9 +163,20 @@ public class SocialMediaController {
         return ResponseEntity.status(204).body(null);
     }
 
-    @PostMapping("posts/removeLike")
+    @PostMapping("/posts/removeLike")
     public @ResponseBody ResponseEntity<Object> removeLike(@RequestBody PostLike postLike){
         postService.removeLike(postLike.getPlAccountId(), postLike.getPlPostId());
         return ResponseEntity.status(204).body(null);
+    }
+
+    @PostMapping("/comments")
+    public @ResponseBody ResponseEntity<CommentDto> addComment(@RequestBody Comment comment){
+        try {
+            CommentDto commentDto = commentService.createComment(comment);
+            return ResponseEntity.status(200).body(commentDto);
+        } catch(AccountDoesNotExistException | PostDoesNotExistException e){
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(null);
+        }
     }
 }
