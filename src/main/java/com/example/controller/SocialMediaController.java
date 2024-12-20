@@ -19,13 +19,17 @@ import com.example.entity.PostDto;
 import com.example.entity.PostLike;
 import com.example.exception.AccountAlreadyExistsException;
 import com.example.exception.AccountDoesNotExistException;
+import com.example.exception.AccountInfoException;
 import com.example.exception.InvalidPostException;
 import com.example.exception.InvalidUsernamePasswordException;
 import com.example.exception.PostDoesNotExistException;
 import com.example.repository.AccountRepository;
 import com.example.service.AccountService;
 import com.example.service.CommentService;
+import com.example.service.JwtService;
 import com.example.service.PostService;
+
+import io.jsonwebtoken.JwtException;
 
 
 @RestController
@@ -39,6 +43,9 @@ public class SocialMediaController {
 
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    JwtService jwtService;
 
 
     @PostMapping("/register")
@@ -118,6 +125,20 @@ public class SocialMediaController {
             return ResponseEntity.status(200).body(postOpt.get());
         }
         return ResponseEntity.status(200).body(null);
+    }
+
+    @PostMapping("/following/posts")
+    public @ResponseBody ResponseEntity<List<Post>> getPostsByFollowing(@RequestBody String token){
+        System.err.println("token in controller: " + token);
+        try {
+            List<Post> postsByFollowing = postService.getPostsByFollowing(token);
+            System.err.println("posts in controller: " + postsByFollowing);
+            return ResponseEntity.status(200).body(postsByFollowing);
+        } catch(AccountDoesNotExistException | AccountInfoException | JwtException e){
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(null);
+        }
+        
     }
 
     @DeleteMapping("/posts/{id}")

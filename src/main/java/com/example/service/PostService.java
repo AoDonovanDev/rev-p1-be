@@ -4,6 +4,7 @@ import java.lang.classfile.ClassFile.Option;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.naming.java.javaURLContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,10 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.entity.Post;
 import com.example.entity.PostDto;
 import com.example.entity.PostLike;
+import com.example.exception.AccountDoesNotExistException;
+import com.example.exception.AccountInfoException;
 import com.example.exception.InvalidPostException;
 import com.example.repository.AccountRepository;
 import com.example.repository.PostLikeRepository;
 import com.example.repository.PostRepository;
+
+import io.jsonwebtoken.JwtException;
+
 import com.example.entity.Account;
 
 @Service
@@ -27,11 +33,14 @@ public class PostService {
 
     PostLikeRepository postLikeRepository;
 
+    JwtService jwtService;
+
     @Autowired
-    public PostService(PostRepository postRepository, AccountRepository accountRepository, PostLikeRepository postLikeRepository) {
+    public PostService(PostRepository postRepository, AccountRepository accountRepository, PostLikeRepository postLikeRepository, JwtService jwtService) {
         this.postRepository = postRepository;
         this.accountRepository = accountRepository;
         this.postLikeRepository = postLikeRepository;
+        this.jwtService = jwtService;
     }
 
     public PostDto createPost(Post post) throws InvalidPostException{
@@ -77,6 +86,13 @@ public class PostService {
 
     public List<Post> getPostsByUser(Integer accountId) {
         return accountRepository.findById(accountId).get().getPosts();
+    }
+
+    public List<Post> getPostsByFollowing(String token) throws AccountDoesNotExistException, JwtException, AccountInfoException{
+        Integer accountId = jwtService.returnAccountIdFromToken(token);
+        Account account = accountRepository.findByAccountId(accountId).get();
+        System.err.println("account in service: " + account);
+        return account.getPostsByFollowing();
     }
 
     public void addLike(Integer accountId, Integer postId){

@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
@@ -130,10 +131,25 @@ public class Account {
         this.likedPosts = likedPosts;
     }
 
-    public List<Integer> getFollowing() {
-        List<Integer> userIds = following == null ? new ArrayList<Integer>() : following.stream().map(el -> el.accountId).toList();
+    public List<AccountDto> getFollowing() {
+        List<AccountDto> userIds = following == null ? new ArrayList<AccountDto>() : following.stream()
+        .map(el -> new AccountDto(el.getAccountId(), el.getUsername(), el.getPosts()))
+        .toList();
         return userIds;
     }
+
+    public List<Post> getPostsByFollowing() {
+        List<Post> postsByFollowing = new ArrayList<Post>();
+        List<List<Post>> listOfLists = following == null ? new ArrayList<List<Post>>() : following.stream()
+        .map(el -> el.getPosts()).toList();
+        listOfLists.forEach(postsByFollowing::addAll);
+        return postsByFollowing;
+
+
+    }
+
+    
+
 
     public void setFollowing(List<Account> following) {
         this.following = following;

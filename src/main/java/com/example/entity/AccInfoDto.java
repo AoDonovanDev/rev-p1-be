@@ -1,5 +1,6 @@
 package com.example.entity;
 
+//suitable for returning a single account and a success flag
 public class AccInfoDto {
     private boolean success;
     private Account account;

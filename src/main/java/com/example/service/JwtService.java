@@ -28,7 +28,6 @@ public class JwtService {
 
     public String generateAccountToken(Account account){
         String jws = Jwts.builder()
-        .claim("accountInfo", account)
         .claim("accountId", account.getAccountId())
         .signWith(key).compact();
         return jws;
