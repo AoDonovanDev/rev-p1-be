@@ -9,8 +9,8 @@ import java.util.List;
 @Table(name="post")
 public class Post {
    
-     @Column (name="postId")
-     @Id @GeneratedValue
+     @Column
+     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer postId;
     
     @Column (name="postedBy")

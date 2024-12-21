@@ -100,7 +100,7 @@ public class SocialMediaController {
 
     @PostMapping("/posts") 
     public @ResponseBody ResponseEntity<PostDto> createPost(@RequestBody Post post) {
-
+        System.err.println("***************************controller add post route: " + post);
         try {
             PostDto newPost = postService.createPost(post);
             return ResponseEntity.status(200).body(newPost);

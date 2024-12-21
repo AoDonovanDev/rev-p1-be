@@ -49,6 +49,7 @@ public class PostService {
         if(post.getPostText().length() > 255 || post.getPostText().length() == 0 || account==null) {
             throw new InvalidPostException();
         }
+        System.err.println("*************************post obj in post service: " + post);
         Post newPost = postRepository.save(post);
         PostDto postDto = new PostDto(newPost.getPostId(), account.getUsername(), newPost.getPostText(), newPost.getTimePostedEpoch());
         return postDto;
