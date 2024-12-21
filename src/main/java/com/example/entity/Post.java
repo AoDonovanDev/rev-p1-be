@@ -128,7 +128,7 @@ public class Post {
     }
 
     public List<Integer> getPostLikes() {
-        List<Integer> pls = postLikes == null ? new ArrayList<>() : postLikes.stream().map(el -> el.getPlPostId()).toList();
+        List<Integer> pls = postLikes == null ? new ArrayList<>() : postLikes.stream().map(el -> el.getPlAccountId()).toList();
         return pls;
     }
     /**
